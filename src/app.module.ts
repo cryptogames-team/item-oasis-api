@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UserModule } from './domain/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMconfig } from './config/typeorm.config';
+import { LoggerMiddleware } from './utils/logger/logger.middleware';
+import { TransactionModule } from './domain/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -11,7 +13,12 @@ import { typeORMconfig } from './config/typeorm.config';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot(typeORMconfig),
-    UserModule
+    UserModule,
+    TransactionModule
   ]
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

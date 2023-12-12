@@ -21,6 +21,7 @@ dotenv.config();
     TypeOrmExModule.forCustomRepository([UserRepository])
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule]
 })
 export class UserModule {}
