@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/domain/user/entities/user.entity";
+import { TransactionDetailImage } from "./transaction_detail-image.entity";
 
 @Entity({name: 'transaction_board'})
 export class TransactionBoard extends BaseEntity {
@@ -57,6 +58,8 @@ export class TransactionBoard extends BaseEntity {
     @JoinColumn({name: "user_id"})
     user_id: number;
     
+    @OneToMany(()=> TransactionDetailImage, detail_image => detail_image.transaction_board_id, {eager: false})
+    transaction_detail_image: TransactionDetailImage[];
 
 
 }

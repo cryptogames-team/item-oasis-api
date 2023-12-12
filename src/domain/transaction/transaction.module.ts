@@ -4,10 +4,11 @@ import { TransactionService } from './transaction.service';
 import { TypeOrmExModule } from 'src/core/typeorm-ex.module';
 import { TransactionBoardRepository } from './repositories/transaction-board.repository';
 import { UserModule } from '../user/user.module';
+import { TransactionDetailImageRepository } from './repositories/transaction-detail-image.repository';
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([TransactionBoardRepository]),
+    TypeOrmExModule.forCustomRepository([TransactionBoardRepository,TransactionDetailImageRepository]),
     UserModule
   ],
   controllers: [TransactionController],

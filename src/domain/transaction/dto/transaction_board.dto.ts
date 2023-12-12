@@ -8,37 +8,37 @@ export class TransactionBoardDTO {
     @ApiProperty({description: 'transaction_board_title'})
     transaction_board_title: string;
 
-    @IsNumber()
+    // @IsNumber()
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_game'})
     transaction_board_game: number;
 
-    @IsNumber()
+
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_server'})
     transaction_board_server: number;
 
-    @IsNumber()
+
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_type'})
     transaction_board_type: number;
 
-    @IsNumber()
+
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_item_type'})
     transaction_board_item_type: number;
 
-    @IsNumber()
+
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_amount'})
     transaction_board_amount: number;
 
-    @IsNumber()
+
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_min_amount'})
     transaction_board_min_amount: number;
 
-    @IsNumber()
+ 
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_item_price'})
     transaction_board_item_price: number;

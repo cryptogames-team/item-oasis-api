@@ -1,5 +1,6 @@
 import { User } from "../../user/entities/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { TransactionDetailImage } from "../entities/transaction_detail-image.entity";
 
 export class TransactionBoardArrayAndUser {
 
@@ -44,6 +45,9 @@ export class TransactionBoardAndUser extends TransactionBoardArrayAndUser{
 
     @ApiProperty({description: 'transaction_board_character_name'})
     transaction_board_character_name: string;
+
+    @ApiProperty({description: 'transaction_detail_image'})
+    transaction_detail_image: TransactionDetailImage;
 }
 
   

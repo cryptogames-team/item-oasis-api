@@ -3,8 +3,8 @@ import { TransactionBoard } from "../entities/transaction-board.entity";
 import { Repository } from "typeorm";
 import { TransactionBoardDTO } from "../dto/transaction_board.dto";
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { User } from "src/domain/user/entities/user.entity";
 import { GetTransactionBoardByItemType } from "../dto/get_transaction_board.dto";
+import { User } from "src/domain/user/entities/user.entity";
 
 @CustomRepository(TransactionBoard)
 export class TransactionBoardRepository extends Repository<TransactionBoard> {
@@ -87,6 +87,8 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
 
         query.leftJoinAndSelect('transaction_board.user_id', 'user');
 
+        query.leftJoinAndSelect('transaction_board.transaction_detail_image', 'transaction_detail_image');
+
         query.andWhere('transaction_board.transaction_board_id = :transaction_board_id', { transaction_board_id });
 
         const found = await query.getOne();
@@ -96,5 +98,31 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
         }
 
         return found;
+    }
+
+    async isMyTransactionBoard(transaction_board_id: number, user_id: number) {
+
+        await this.getTransactionBoardByID(transaction_board_id);
+
+        const found = await this.findOne({
+            where : {
+                user_id,
+                transaction_board_id
+            }
+        });
+
+        if(!found){
+            throw new NotFoundException(`transaction_board_id : ${transaction_board_id} isn't your transaction board`);
+        }
+    }
+    async removeTransactionBoardByID(transaction_board_id: number, user: User): Promise<string> {
+
+        const { user_id } = user;
+
+        await this.isMyTransactionBoard(transaction_board_id, user_id);
+
+        await this.delete({transaction_board_id});
+
+        return 'delete success';
     }
 }
