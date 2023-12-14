@@ -6,6 +6,7 @@ import { User } from '../user/entities/user.entity';
 import { GetTransactionBoardByItemType } from './dto/get_transaction_board.dto';
 import { S3FolderName, deleteMedia, mediaUpload } from 'src/utils/s3-util';
 import { TransactionDetailImageRepository } from './repositories/transaction-detail-image.repository';
+import { Multer } from 'multer';
 
 @Injectable()
 export class TransactionService {
@@ -63,8 +64,18 @@ export class TransactionService {
         return this.transactionBoardRepository.removeTransactionBoardByID(transaction_board_id,user);
     }
 
-    updateTransactionBoardByID(transaction_board_id: number, transactionBoardDto: TransactionBoardDTO, user: User): Promise<number> {
+    async updateTransactionBoardByID(transaction_board_id: number, transactionBoardDto: TransactionBoardDTO, user: User, files: Express.Multer.File[]): Promise<number> {
         this.transactionBoardRepository.isMyTransactionBoard(transaction_board_id,user.user_id);
+        if(files){
+            const detail_image = await this.transactionDetailImageRepository.getDetailImage(transaction_board_id);
+            if(detail_image){
+                await this.transactionDetailImageRepository.removeDetailImageByTransactionBoardID(transaction_board_id);
+            }
+            for(const file of files) {
+                const url = await mediaUpload(file, S3FolderName.TransactionBoard);
+                this.transactionDetailImageRepository.addDetailImage(transaction_board_id,url);
+            }
+        }
         return this.transactionBoardRepository.updateTransactionBoardByID(transaction_board_id,transactionBoardDto);
     }
 }
