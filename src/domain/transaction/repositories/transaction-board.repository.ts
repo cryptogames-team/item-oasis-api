@@ -34,7 +34,8 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             'transaction_board.transaction_board_amount',
             'transaction_board.transaction_board_item_price',
             'transaction_board.transaction_board_date',
-            'transaction_board.user_id'
+            'transaction_board.user_id',
+            'transaction_board.transaction_board_sale_type'
         ]).leftJoinAndSelect('transaction_board.user_id', 'user');
 
         if (transaction_board_game) {
@@ -117,12 +118,13 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
     }
     async removeTransactionBoardByID(transaction_board_id: number, user: User): Promise<string> {
 
-        const { user_id } = user;
-
-        await this.isMyTransactionBoard(transaction_board_id, user_id);
-
         await this.delete({transaction_board_id});
 
         return 'delete success';
+    }
+
+    async updateTransactionBoardByID(transaction_board_id: number, transaction_board: TransactionBoardDTO): Promise<number> {
+        await this.update(transaction_board_id, transaction_board);
+        return transaction_board_id;
     }
 }

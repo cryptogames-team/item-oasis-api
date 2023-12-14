@@ -24,9 +24,13 @@ export class TransactionBoardArrayAndUser {
 
     @ApiProperty({description: '유저'})
     user: User;
+
+    @ApiProperty({description: 'transaction_board_sale_type'})
+    transaction_board_sale_type: number;
 }
 
 export class TransactionBoardAndUser extends TransactionBoardArrayAndUser{
+
 
     @ApiProperty({description: 'transaction_board_game'})
     transaction_board_game: number;

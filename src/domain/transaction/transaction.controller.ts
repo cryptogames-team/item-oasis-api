@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Delete, ValidationPipe, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Body, Controller, Post, Get, Delete, Patch, ValidationPipe, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionBoardDTO } from './dto/transaction_board.dto';
 import { TransactionBoard } from './entities/transaction-board.entity';
@@ -58,5 +58,16 @@ export class TransactionController {
     ): Promise<string> {
         return this.transactionService.removeTransactionBoardByID(transaction_board_id,user);
     }
-
+    
+    @UseAuthGuard()
+    @Patch('/:transaction_board_id')
+    @ApiOperation({summary: '특정 거래 게시글 수정', description: '게시글 ID값은 param으로 게시글 내용은 body에 담을 것'})
+    @ApiCreatedResponse({description:'오류 없으면 게시글 ID값이 보내질거임 json형식 아님'})
+    updateTransactionBoardByID(
+        @AuthUser()user: User,
+        @Param('transaction_board_id')transaction_board_id: number,
+        @Body()transactionBoardDto: TransactionBoardDTO
+    ): Promise<number> {
+        return this.transactionService.updateTransactionBoardByID(transaction_board_id,transactionBoardDto,user);
+    }
 }

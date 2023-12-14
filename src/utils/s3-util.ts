@@ -52,10 +52,24 @@ export const mediaUpload = async (
     file.originalname
   }`;
 
-  
-  
-
   const fileKey = `${folder}/${fileName}`;
   const result = await asyncUploadToS3(fileKey, file.buffer);
   return result.Location;
 };
+
+export const deleteMedia = async (
+  fileKey: string
+) => {
+  const s3 = new S3({
+    accessKeyId: process.env.AWS_ACECSS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_BUCKET_REGION,
+  });
+  const bucket = process.env.AWS_BUCKET_NAME;
+  const deleteParams = {
+    Bucket : bucket,
+    Key : fileKey
+  };
+
+  await s3.deleteObject(deleteParams).promise();
+}

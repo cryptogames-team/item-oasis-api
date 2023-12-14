@@ -31,6 +31,10 @@ export class TransactionBoard extends BaseEntity {
 
     @ApiProperty()
     @Column()
+    transaction_board_sale_type: number;
+
+    @ApiProperty()
+    @Column()
     transaction_board_amount: number;
 
     @ApiProperty()

@@ -17,5 +17,16 @@ export class TransactionDetailImageRepository extends Repository<TransactionDeta
             throw new InternalServerErrorException();
         }
     }
+
+    async getDetailImage(transaction_board_id: number): Promise<TransactionDetailImage[]> {
+        const query = this.createQueryBuilder('transaction_detail_image')
+                      .where('transaction_detail_image.transaction_board_id = :transaction_board_id', {transaction_board_id});
+        
+        return await query.getMany();
+    }
+
+    async removeDetailImageByTransactionBoardID(transaction_board_id: number) {
+        await this.delete({transaction_board_id});
+    }
    
 }

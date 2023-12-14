@@ -28,6 +28,6 @@ export const winstonLogger = WinstonModule.createLogger({
     }),
     new winstonDaily(dailyOption('warn')),
     new winstonDaily(dailyOption('error')),
-    new winstonDaily(dailyOption('log'))
+    new winstonDaily(dailyOption('info'))
   ],
 });

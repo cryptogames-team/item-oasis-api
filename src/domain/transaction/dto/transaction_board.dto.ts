@@ -28,7 +28,10 @@ export class TransactionBoardDTO {
     @ApiProperty({description: 'transaction_board_item_type'})
     transaction_board_item_type: number;
 
-
+    @IsNotEmpty()
+    @ApiProperty({description: 'transaction_board_sale_type'})
+    transaction_board_sale_type: number;
+    
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_amount'})
     transaction_board_amount: number;
