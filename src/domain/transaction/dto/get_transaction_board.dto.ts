@@ -5,6 +5,10 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class GetTransactionBoardByItemType {
 
+    @IsString()
+    @ApiProperty({description: '검색어'})
+    transaction_board_title: string;
+
     @IsNumber()
     @ApiProperty({description: '게임의 ID값'})
     transaction_board_game: number;

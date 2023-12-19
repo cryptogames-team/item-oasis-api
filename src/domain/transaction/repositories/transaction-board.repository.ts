@@ -17,12 +17,13 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             await this.save(board);
             return board;
         }catch(error){
+            console.log(error)
             throw new InternalServerErrorException();
         }
     }
 
     async getTransactionBoard(params: GetTransactionBoardByItemType): Promise<{board: TransactionBoard[] , count: number}> {
-        const { transaction_board_game, transaction_board_server, 
+        const { transaction_board_game, transaction_board_server, transaction_board_title,
                 transaction_board_type, transaction_board_item_type, limit, filter, page } = params;
   
         const query = this.createQueryBuilder('transaction_board');
@@ -37,6 +38,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             'transaction_board.user_id',
             'transaction_board.transaction_board_sale_type'
         ]).leftJoinAndSelect('transaction_board.user_id', 'user');
+
+        if(transaction_board_title){
+            query.andWhere('transaction_board.transaction_board_title LIKE :title',  {title: `%${transaction_board_title}%`});
+        }
 
         if (transaction_board_game) {
             query.andWhere('transaction_board.transaction_board_game = :transaction_board_game', { transaction_board_game });

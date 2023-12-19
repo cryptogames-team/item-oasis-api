@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/domain/user/entities/user.entity";
 import { TransactionDetailImage } from "./transaction_detail-image.entity";
@@ -56,6 +56,8 @@ export class TransactionBoard extends BaseEntity {
     @ApiProperty()
     @Column()
     transaction_board_date: string;
+
+
 
     @ApiProperty()
     @ManyToOne(()=> User, user => user.transaction_board, {eager: false})
