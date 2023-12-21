@@ -1,10 +1,11 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { UserModule } from './domain/user/user.module';
+import { UserModule } from './module/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMconfig } from './config/typeorm.config';
 import { LoggerMiddleware } from './utils/logger/logger.middleware';
-import { TransactionModule } from './domain/transaction/transaction.module';
+import { TransactionModule } from './module/transaction/transaction.module';
+import { TransactionBoardModule } from './module/transactionBoard/transaction-board.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { TransactionModule } from './domain/transaction/transaction.module';
     }),
     TypeOrmModule.forRoot(typeORMconfig),
     UserModule,
-    TransactionModule
+    TransactionModule,
+    TransactionBoardModule
   ]
 })
 export class AppModule {
