@@ -72,4 +72,9 @@ export class TransactionBoardController {
     ): Promise<number> {
         return this.transactionBoardService.updateTransactionBoardByID(transaction_board_id,transactionBoardDto,user,files);
     }
+
+    @Delete('/select')
+    removebyselect(){
+        
+    }
 }
