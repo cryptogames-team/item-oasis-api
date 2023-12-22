@@ -2,7 +2,7 @@ import { CustomRepository } from "src/core/typeorm-ex.decorator";
 import { TransactionBoard } from "../../entity/transactionBoard/transaction-board.entity";
 import { Repository } from "typeorm";
 import { TransactionBoardDTO } from "../../dto/transactionBoard/transaction_board.dto";
-import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { GetTransactionBoardByItemType } from "../../dto/transactionBoard/get_transaction_board.dto";
 import { User } from "src/entity/user/user.entity";
 
@@ -118,7 +118,7 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
         });
 
         if(!found){
-            throw new NotFoundException(`transaction_board_id : ${transaction_board_id} isn't your transaction board`);
+            throw new ForbiddenException(`transaction_board_id : ${transaction_board_id} isn't your transaction board`);
         }
     }
     async removeTransactionBoardByID(transaction_board_id: number, user: User): Promise<string> {
