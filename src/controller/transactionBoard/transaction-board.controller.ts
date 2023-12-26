@@ -49,10 +49,29 @@ export class TransactionBoardController {
     }
 
     @Get('/user/:user_name')
+    @ApiOperation({summary: '유저 거래 게시글 목록 가져오기', description: '설명이 필요하겠노'})
+    @ApiCreatedResponse({description:'배열로 보낼거임', type: [TransactionBoardArrayAndUser]})
     getTransactionBoardByName(
         @Param('user_name')user_name: string
     ):Promise<TransactionBoard[]> {
         return this.transactionBoardService.getTransactionBoardByName(user_name);
+    }
+
+    @UseAuthGuard()
+    @Delete('/select')
+    @ApiOperation({summary: '선택한 거래 게시글들 삭제', description: '게시글 ID값을 배열로 보낼 것'})
+    @ApiCreatedResponse({description:'오류 없으면 success가 보내질거임 json형식 아님'})
+    async removeTransactionBoardBySelect(
+        @Body() body: { transaction_board_ids: number[] },
+        @AuthUser()user: User
+    ) {
+        const { transaction_board_ids } = body;
+        for (const transaction_board_id of transaction_board_ids) {
+            await this.transactionBoardService.removeTransactionBoardByID(transaction_board_id, user);
+        }
+
+        return 'success';
+
     }
 
     @UseAuthGuard()
@@ -65,6 +84,8 @@ export class TransactionBoardController {
     ): Promise<string> {
         return this.transactionBoardService.removeTransactionBoardByID(transaction_board_id,user);
     }
+
+
     
     @UseAuthGuard()
     @Put('/:transaction_board_id')
@@ -82,6 +103,8 @@ export class TransactionBoardController {
 
     @UseAuthGuard()
     @Patch('/:transaction_board_id/:transaction_completed')
+    @ApiOperation({summary: '거래게시판 거래 확정', description: ''})
+    @ApiCreatedResponse({description:'오류 없으면 게시글 ID값이 보내질거임 json형식 아님'})
     updateTransactionCompleted(
         @Param('transaction_board_id')transaction_board_id: number,
         @Param('transaction_completed')transaction_completed: number,

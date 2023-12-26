@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get, Patch, ValidationPipe, Param } from '@nestjs/common';
 import { TransactionService } from '../../service/transaction/transaction.service';
 import { TransactionDTO } from 'src/dto/transaction/transaction.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import UseAuthGuard from 'src/auth-guards/use-auth';
 import AuthUser from 'src/core/auth-user.decorator';
 import { User } from 'src/entity/user/user.entity';
@@ -17,12 +17,16 @@ export class TransactionController {
     
     @UseAuthGuard()
     @Post('/')
+    @ApiOperation({summary: '거래 등록', description: ''})
+    @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
     create(@Body(ValidationPipe)transactionDTO: TransactionDTO){
         return this.transactionService.create(transactionDTO);
     }
 
     @UseAuthGuard()
     @Patch('/buy/:transaction_id')
+    @ApiOperation({summary: '구매 확정', description: ''})
+    @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
     buyConfirmed(
         @Param('transaction_id')transaction_id: number,
         @AuthUser()user: User){
@@ -30,6 +34,8 @@ export class TransactionController {
     }
     @UseAuthGuard()
     @Patch('/sell/:transaction_id')
+    @ApiOperation({summary: '판매 확정', description: ''})
+    @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
     saleConfirmed(
         @Param('transaction_id')transaction_id: number,
         @AuthUser()user: User){
@@ -37,6 +43,8 @@ export class TransactionController {
     }
     @UseAuthGuard()
     @Patch('/fraud/:transaction_id')
+    @ApiOperation({summary: '사기 등록', description: ''})
+    @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
     setIsFraud(
         @Param('transaction_id')transaction_id: number,
         @AuthUser()user: User){
@@ -44,11 +52,15 @@ export class TransactionController {
     }
 
     @Get('/seller/:seller')
+    @ApiOperation({summary: '판매자의 거래 리스트', description: ''})
+    @ApiCreatedResponse({description:'테이블 리스트가 갈거'})
     getTableBySeller(@Param('seller')seller: string){
         return this.transactionService.getTableBySeller(seller);
     }
 
     @Get('/buyer/:buyer')
+    @ApiOperation({summary: '구매자의 거래 리스트', description: ''})
+    @ApiCreatedResponse({description:'테이블 리스트가 갈거'})
     getTableByBuyer(@Param('buyer')buyer: string){
         return this.transactionService.getTableByBuyer(buyer);
     }

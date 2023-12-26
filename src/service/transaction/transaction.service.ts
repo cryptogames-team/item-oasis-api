@@ -3,6 +3,7 @@ import { TransactionDTO } from 'src/dto/transaction/transaction.dto';
 import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js';
 import { User } from 'src/entity/user/user.entity';
+import { UserRepository } from 'src/repository/user/user.repository';
 
 @Injectable()
 export class TransactionService {
@@ -10,7 +11,9 @@ export class TransactionService {
     private signatureProvider: JsSignatureProvider;
     private hep: Api;
     
-    constructor(){
+    constructor(
+        private userRepository: UserRepository
+    ){
         this.rpc = new JsonRpc('http://14.63.34.160:8888');
         this.signatureProvider = new JsSignatureProvider([process.env.CONTRACT_PRIVATE_KEY]);
         this.hep = new Api({
@@ -112,6 +115,14 @@ export class TransactionService {
                         blocksBehind: 3,
                         expireSeconds: 30,
                     });
+                    const sale = await this.getTableByBuyer(response.rows[0].seller);
+                    let sale_count = 0;
+                    for(let i = 0; i < sale.length; i++){
+                        if(sale[i].trasaction_completed === 1){
+                            sale_count++;
+                        }
+                    }
+                    await this.userRepository.updateRating(response.rows[0].seller,sale_count);
                     return result;
                 }else {
                     throw new ForbiddenException(`${transaction_id} is not your transaction`);

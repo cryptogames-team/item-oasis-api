@@ -17,6 +17,10 @@ export class User extends BaseEntity {
     @Column()
     profile_image: string;
 
+    @ApiProperty()
+    @Column()
+    user_rating: number;
+
     @OneToMany(type => TransactionBoard, transactionBoard => transactionBoard.user_id, {eager: false})
     transaction_board: TransactionBoard[];
 }

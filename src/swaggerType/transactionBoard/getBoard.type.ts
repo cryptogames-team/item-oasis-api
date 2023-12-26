@@ -1,6 +1,8 @@
 import { User } from "../../entity/user/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { TransactionDetailImage } from "../../entity/transactionBoard/transaction_detail-image.entity";
+import { GameInfo } from "src/entity/game/game.entity";
+import { GameServer } from "src/entity/game/game-server.entity";
 
 export class TransactionBoardArrayAndUser {
 
@@ -27,16 +29,16 @@ export class TransactionBoardArrayAndUser {
 
     @ApiProperty({description: 'transaction_board_sale_type'})
     transaction_board_sale_type: number;
+
+    @ApiProperty({description: 'game'})
+    game_id: GameInfo;
+
+    @ApiProperty({description: 'game_server'})
+    game_server_id: GameServer;
 }
 
 export class TransactionBoardAndUser extends TransactionBoardArrayAndUser{
 
-
-    @ApiProperty({description: 'transaction_board_game'})
-    transaction_board_game: number;
-
-    @ApiProperty({description: 'transaction_board_server'})
-    transaction_board_server: number;
 
     @ApiProperty({description: 'transaction_board_type'})
     transaction_board_type: number;

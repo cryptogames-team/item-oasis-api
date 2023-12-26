@@ -31,7 +31,7 @@ export class UserRepository extends Repository<User> {
     async createUser(userDto: UserDto): Promise<User>{
         const {user_name} = userDto;
 
-        const user = this.create({user_name , profile_image : ""})
+        const user = this.create({user_name , profile_image : "" , user_rating : 0})
 
         try{
             return await this.save(user);
@@ -49,6 +49,23 @@ export class UserRepository extends Repository<User> {
         const user_row = await this.getUser(user.user_name);
     
         user_row.profile_image = filePath;
+        const save_user = await this.save(user_row);
+
+        if(!save_user){
+            throw new InternalServerErrorException();
+        }
+
+        return user_row;
+    }
+
+    async updateRating(user_name: string, sale_count: number) {
+        const user_row = await this.getUser(user_name);
+    
+        if(sale_count >= 1 && sale_count < 20) user_row.user_rating = 1;
+        if(sale_count >= 20 && sale_count < 100) user_row.user_rating = 2;
+        if(sale_count >= 100 && sale_count < 250) user_row.user_rating = 3;
+        if(sale_count >= 250) user_row.user_rating = 4;
+
         const save_user = await this.save(user_row);
 
         if(!save_user){

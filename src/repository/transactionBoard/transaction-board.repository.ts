@@ -136,7 +136,6 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
     }
 
     async isMyTransactionBoard(transaction_board_id: number, user_id: number) {
-
         await this.getTransactionBoardByID(transaction_board_id);
 
         const found = await this.findOne({
