@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Delete, ValidationPipe, Param, Query, UseInterceptors, UploadedFiles, Put } from '@nestjs/common';
+import { Body, Controller, Post, Patch, Get, Delete, ValidationPipe, Param, Query, UseInterceptors, UploadedFiles, Put } from '@nestjs/common';
 import { TransactionBoardService } from '../../service/transactionBoard/transaction-board.service';
 import UseAuthGuard from 'src/auth-guards/use-auth';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -48,6 +48,13 @@ export class TransactionBoardController {
         return this.transactionBoardService.getTransactionBoardByID(transaction_board_id);
     }
 
+    @Get('/user/:user_name')
+    getTransactionBoardByName(
+        @Param('user_name')user_name: string
+    ):Promise<TransactionBoard[]> {
+        return this.transactionBoardService.getTransactionBoardByName(user_name);
+    }
+
     @UseAuthGuard()
     @Delete('/:transaction_board_id')
     @ApiOperation({summary: '특정 거래 게시글 삭제', description: '게시글 ID값으로 보낼 것'})
@@ -71,5 +78,15 @@ export class TransactionBoardController {
         @Body()transactionBoardDto: TransactionBoardDTO
     ): Promise<number> {
         return this.transactionBoardService.updateTransactionBoardByID(transaction_board_id,transactionBoardDto,user,files);
+    }
+
+    @UseAuthGuard()
+    @Patch('/:transaction_board_id/:transaction_completed')
+    updateTransactionCompleted(
+        @Param('transaction_board_id')transaction_board_id: number,
+        @Param('transaction_completed')transaction_completed: number,
+        @AuthUser()user: User
+    ): Promise<number> {
+        return this.transactionBoardService.updateTransactionCompleted(transaction_board_id,transaction_completed,user);
     }
 }

@@ -40,6 +40,10 @@ export class TransactionBoardService {
         return this.transactionBoardRepository.getTransactionBoardByID(transaction_board_id);
     }
 
+    getTransactionBoardByName(user_name: string): Promise<TransactionBoard[]> {
+        return this.transactionBoardRepository.getTransactionBoardByName(user_name);
+    }
+
     async removeTransactionBoardByID(transaction_board_id: number, user: User): Promise<string> {
         await this.transactionBoardRepository.isMyTransactionBoard(transaction_board_id, user.user_id);
 
@@ -77,5 +81,11 @@ export class TransactionBoardService {
             }
         }
         return this.transactionBoardRepository.updateTransactionBoardByID(transaction_board_id,transactionBoardDto);
+    }
+
+    async updateTransactionCompleted(transaction_board_id: number, transaction_completed: number, user: User): Promise<number> {
+        await this.transactionBoardRepository.isMyTransactionBoard(transaction_board_id, user.user_id);
+        
+        return this.transactionBoardRepository.updateTransactionCompleted(transaction_board_id,transaction_completed);
     }
 }

@@ -10,13 +10,13 @@ export class TransactionBoardDTO {
 
     // @IsNumber()
     @IsNotEmpty()
-    @ApiProperty({description: 'transaction_board_game'})
-    transaction_board_game: number;
+    @ApiProperty({description: 'game_id'})
+    game_id: number;
 
 
     @IsNotEmpty()
-    @ApiProperty({description: 'transaction_board_server'})
-    transaction_board_server: number;
+    @ApiProperty({description: 'game_server_id'})
+    game_server_id: number;
 
 
     @IsNotEmpty()
@@ -60,6 +60,10 @@ export class TransactionBoardDTO {
     @IsNotEmpty()
     @ApiProperty({description: 'transaction_board_date'})
     transaction_board_date: string;
+
+    @IsNotEmpty()
+    @ApiProperty({description: 'transaction_completed'})
+    transaction_completed: number;
 
     user_id: number;
 

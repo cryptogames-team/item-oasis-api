@@ -11,11 +11,11 @@ export class GetTransactionBoardByItemType {
 
     @IsNumber()
     @ApiProperty({description: '게임의 ID값'})
-    transaction_board_game: number;
+    game_id: number;
 
     @IsNumber()
     @ApiProperty({description: '게임 서버의 ID값'})
-    transaction_board_server: number;
+    game_server_id: number;
 
     @IsNumber()
     @ApiProperty({description: '판매글 : 0, 구매글 : 1'})

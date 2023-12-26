@@ -1,7 +1,9 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/entity/user/user.entity";
 import { TransactionDetailImage } from "./transaction_detail-image.entity";
+import { GameInfo } from "../game/game.entity";
+import { GameServer } from "../game/game-server.entity";
 
 @Entity({name: 'transaction_board'})
 export class TransactionBoard extends BaseEntity {
@@ -14,12 +16,14 @@ export class TransactionBoard extends BaseEntity {
     transaction_board_title: string;
 
     @ApiProperty()
-    @Column()
-    transaction_board_game: number;
+    @OneToOne(()=> GameInfo, gameinfo => gameinfo.game_id, {eager: false})
+    @JoinColumn({name: "game_id"})
+    game_id: number;
 
     @ApiProperty()
-    @Column()
-    transaction_board_server: number;
+    @OneToOne(()=> GameServer, game_server => game_server.game_server_id, {eager: false})
+    @JoinColumn({name: "game_server_id"})
+    game_server_id: number;
 
     @ApiProperty()
     @Column()
@@ -57,6 +61,9 @@ export class TransactionBoard extends BaseEntity {
     @Column()
     transaction_board_date: string;
 
+    @ApiProperty()
+    @Column({ default : 0 })
+    transaction_completed: number;
 
 
     @ApiProperty()
