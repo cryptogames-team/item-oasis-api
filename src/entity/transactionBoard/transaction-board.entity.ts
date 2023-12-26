@@ -16,12 +16,12 @@ export class TransactionBoard extends BaseEntity {
     transaction_board_title: string;
 
     @ApiProperty()
-    @OneToOne(()=> GameInfo, gameinfo => gameinfo.game_id, {eager: false})
+    @ManyToOne(()=> GameInfo, gameinfo => gameinfo.game_id, {eager: false})
     @JoinColumn({name: "game_id"})
     game_id: number;
 
     @ApiProperty()
-    @OneToOne(()=> GameServer, game_server => game_server.game_server_id, {eager: false})
+    @ManyToOne(()=> GameServer, game_server => game_server.game_server_id, {eager: false})
     @JoinColumn({name: "game_server_id"})
     game_server_id: number;
 

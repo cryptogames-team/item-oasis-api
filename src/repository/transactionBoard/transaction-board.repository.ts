@@ -15,7 +15,8 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
 
         try {
             await this.save(board);
-            return board;
+            const final_board = await this.getTransactionBoardByID(board.transaction_board_id);
+            return final_board;
         }catch(error){
             console.log(error)
             throw new InternalServerErrorException();
@@ -38,8 +39,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             'transaction_board.user_id',
             'transaction_board.transaction_board_item_type',
             'transaction_board.transaction_board_sale_type'
-        ]).leftJoinAndSelect('transaction_board.user_id', 'user');
-
+        ]).leftJoinAndSelect('transaction_board.user_id', 'user')
+        .leftJoinAndSelect('transaction_board.game_id','game')
+        .leftJoinAndSelect('transaction_board.game_server_id','game_server');
+        
         if(transaction_board_title){
             query.andWhere('transaction_board.transaction_board_title LIKE :title',  {title: `%${transaction_board_title}%`});
         }
@@ -96,6 +99,9 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
 
         query.leftJoinAndSelect('transaction_board.transaction_detail_image', 'transaction_detail_image');
 
+        query.leftJoinAndSelect('transaction_board.game_id','game')
+        .leftJoinAndSelect('transaction_board.game_server_id','game_server');
+
         query.andWhere('transaction_board.transaction_board_id = :transaction_board_id', { transaction_board_id });
 
         const found = await query.getOne();
@@ -120,7 +126,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             'transaction_board.user_id',
             'transaction_board.transaction_board_item_type',
             'transaction_board.transaction_board_sale_type'
-        ]).leftJoinAndSelect('transaction_board.user_id', 'user')
+        ])
+        .leftJoinAndSelect('transaction_board.user_id', 'user')
+        .leftJoinAndSelect('transaction_board.game_id','game')
+        .leftJoinAndSelect('transaction_board.game_server_id','game_server')
         .andWhere('user.user_name = :user_name', { user_name });
 
         return await query.getMany()

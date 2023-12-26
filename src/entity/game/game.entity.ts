@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { GameServer } from "./game-server.entity";
+import { TransactionBoard } from "../transactionBoard/transaction-board.entity";
 
 @Entity({name: 'game_info'})
 export class GameInfo extends BaseEntity {
@@ -15,4 +16,6 @@ export class GameInfo extends BaseEntity {
     @OneToMany(()=> GameServer, game_server => game_server.game_id, {eager: false})
     game_server: GameServer[];
 
+    @OneToMany(()=> TransactionBoard, transaction_board => transaction_board.game_id, {eager : false})
+    game: GameInfo;
 }
