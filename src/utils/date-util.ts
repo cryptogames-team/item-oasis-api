@@ -1,11 +1,10 @@
 import * as moment from 'moment-timezone';
 
-const timeFormat = 'YYYY-MM-DD HH:mm:ss';
 
 export default class DateUtils {
   // ex) 2023-05-17 15:40:08
   static momentNow(): string {
-    return moment().tz('Asia/Seoul').format(timeFormat);
+    return moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
   }
 
   // ex) 2023-05-17T15:40:08.000Z
@@ -21,6 +20,17 @@ export default class DateUtils {
   // ex) 20230517165408
   static momentFile(): string {
     return moment().tz('Asia/Seoul').format('YYYYMMDDHHmmss');
+  }
+
+  // ex) 20230517165408
+  static momentBlockchain(): number {
+    return parseInt(moment().tz('Asia/Seoul').format('YYYYMMDDHHmmss'));
+  }
+
+  static momentBlockchainD9(): number {
+    const nineDaysAgo = moment().tz('Asia/Seoul').subtract(9, 'days');
+  const formattedValue = parseInt(nineDaysAgo.format('YYYYMMDD'));
+  return formattedValue;
   }
 
   // 0:일 1:월 ... 6:토

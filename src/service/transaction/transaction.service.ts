@@ -4,6 +4,9 @@ import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js';
 import { User } from 'src/entity/user/user.entity';
 import { UserRepository } from 'src/repository/user/user.repository';
+import DateUtils from 'src/utils/date-util';
+import { Cron } from '@nestjs/schedule';
+import { winstonLogger } from 'src/utils/logger/logger.util';
 
 @Injectable()
 export class TransactionService {
@@ -62,6 +65,8 @@ export class TransactionService {
     }
 
     async create(transactionDTO: TransactionDTO){
+        const now_date = DateUtils.momentBlockchain();
+        transactionDTO.date = now_date;
         try{
             const result = await this.hep.transact({
                 actions: [{
@@ -183,44 +188,69 @@ export class TransactionService {
     async setIsFraud(transaction_id: number,user: User){
         const { user_name } = user;
         if(user_name === process.env.CONTRACT_ACCOUNT_NAME){
-
+            try{
+                const response = await this.rpc.get_table_rows({
+                    json: true,
+                    code: process.env.CONTRACT_ACCOUNT_NAME,
+                    scope: process.env.CONTRACT_ACCOUNT_NAME, 
+                    table: 'transactions',
+                    lower_bound : transaction_id,
+                    upper_bound : transaction_id,
+                    index_position : 1,
+                    limit: 1
+                  });
+                if(response.rows.length > 0){
+                    const result = await this.hep.transact({
+                        actions: [{
+                            account: process.env.CONTRACT_ACCOUNT_NAME,
+                            name: 'setisfraud',
+                            authorization: [{
+                            actor: process.env.CONTRACT_ACCOUNT_NAME,  
+                            permission: 'active',
+                            }],
+                            data: {
+                                transaction_id
+                            }
+                        }]    
+                        }, {
+                            blocksBehind: 3,
+                            expireSeconds: 30,
+                        });
+                    return result;
+                }else {
+                    throw new NotFoundException(`Can't found transaction By transaction_id : ${transaction_id}`);
+                }
+            }catch(error){
+                throw new InternalServerErrorException(error);
+            }
         }else {
             throw new ForbiddenException('your not admin');
         }
-        try{
-            const response = await this.rpc.get_table_rows({
-                json: true,
-                code: process.env.CONTRACT_ACCOUNT_NAME,
-                scope: process.env.CONTRACT_ACCOUNT_NAME, 
-                table: 'transactions',
-                lower_bound : transaction_id,
-                upper_bound : transaction_id,
-                index_position : 1,
-                limit: 1
-              });
-            if(response.rows.length > 0){
-                const result = await this.hep.transact({
-                    actions: [{
-                        account: process.env.CONTRACT_ACCOUNT_NAME,
-                        name: 'setisfraud',
-                        authorization: [{
-                        actor: process.env.CONTRACT_ACCOUNT_NAME,  
-                        permission: 'active',
-                        }],
-                        data: {
-                            transaction_id
-                        }
-                    }]    
-                    }, {
-                        blocksBehind: 3,
-                        expireSeconds: 30,
-                    });
-                return result;
-            }else {
-                throw new NotFoundException(`Can't found transaction By transaction_id : ${transaction_id}`);
-            }
-        }catch(error){
-            throw new InternalServerErrorException(error);
+        
+    }
+
+    @Cron('0 0 06 * * *', { timeZone: 'Asia/Seoul' })
+    async expiration(){
+        try {
+            const result = await this.hep.transact({
+                actions: [{
+                    account: process.env.CONTRACT_ACCOUNT_NAME,
+                    name: 'expiration',
+                    authorization: [{
+                      actor: process.env.CONTRACT_ACCOUNT_NAME,  
+                      permission: 'active',
+                    }],
+                    data: {
+                        date : DateUtils.momentBlockchainD9
+                    }
+                  }]    
+            }, {
+                blocksBehind: 3,
+                expireSeconds: 30,
+            });
+            winstonLogger.log(result);
+        }catch(error) {
+            console.log(error);
         }
     }
 }

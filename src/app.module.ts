@@ -8,9 +8,11 @@ import { TransactionModule } from './module/transaction/transaction.module';
 import { TransactionBoardModule } from './module/transactionBoard/transaction-board.module';
 import { GameModule } from './module/game/game.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     RedisModule.forRoot({
       readyLog: true,
       config: {

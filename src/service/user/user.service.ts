@@ -82,4 +82,10 @@ export class UserService {
             accessToken,
         };
       }
+
+      async logout(refreshToken: RefTokenDto){
+        const { refToken } = refreshToken;
+        await this.client.del(refToken);
+        return 'success';
+      }
 }

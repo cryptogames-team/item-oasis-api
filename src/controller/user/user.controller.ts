@@ -31,6 +31,15 @@ export class UserController {
         return this.userService.getNewAccessToken(refToken);
     }
 
+    @Post('/logout')
+    @UseAuthGuard()
+    @ApiOperation({summary: '로그아웃', description: '헤더에 access토큰 담을 것'})
+    @ApiCreatedResponse({description:'success'})
+    logout(
+        @Body()refToken: RefTokenDto){
+        return this.userService.logout(refToken);
+    }
+
     @Get('/:user_name')
     @ApiOperation({summary: '유저 정보 불러오기', description: '유저 이름으로 유저 정보 불러오기'})
     @ApiCreatedResponse({description:'유저 정보 보내줌', type: User})

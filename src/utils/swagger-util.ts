@@ -1,6 +1,11 @@
 import { INestApplication } from "@nestjs/common";
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, SwaggerCustomOptions } from '@nestjs/swagger';
 
+const swaggerCustomOption: SwaggerCustomOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  };
 export function setupSwagger(app: INestApplication): void {
     const options = new DocumentBuilder()
     .setTitle('Item Oasis API Docs')
@@ -18,5 +23,5 @@ export function setupSwagger(app: INestApplication): void {
     .build();
 
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api-docs', app, document);
+    SwaggerModule.setup('api-docs', app, document, swaggerCustomOption);
 }
