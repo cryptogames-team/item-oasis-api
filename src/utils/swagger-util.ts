@@ -3,8 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication): void {
     const options = new DocumentBuilder()
-    .setTitle('NFT Market API Docs')
-    .setDescription('Heptagon NFT Market API Docs')
+    .setTitle('Item Oasis API Docs')
+    .setDescription('Item Oasis API Docs')
     .setVersion('1.0.0')
     .addBearerAuth(
         {

@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         const user: User = await this.userRepository.findOne({where:{user_name}});
 
         if(!user){
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('엑세스 토큰 재발급 요망');
         }
 
         return user;

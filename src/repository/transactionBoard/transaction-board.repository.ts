@@ -24,7 +24,7 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
     }
 
     async getTransactionBoard(params: GetTransactionBoardByItemType): Promise<{board: TransactionBoard[] , count: number}> {
-        const { game_id, game_server_id, transaction_board_title,
+        const { game_id, game_server_id, transaction_board_title, transaction_completed,
                 transaction_board_type, transaction_board_item_type, limit, filter, page } = params;
   
         const query = this.createQueryBuilder('transaction_board');
@@ -38,7 +38,8 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             'transaction_board.transaction_board_date',
             'transaction_board.user_id',
             'transaction_board.transaction_board_item_type',
-            'transaction_board.transaction_board_sale_type'
+            'transaction_board.transaction_board_sale_type',
+            'transaction_board.transaction_completed'
         ]).leftJoinAndSelect('transaction_board.user_id', 'user')
         .leftJoinAndSelect('transaction_board.game_id','game')
         .leftJoinAndSelect('transaction_board.game_server_id','game_server');
@@ -58,6 +59,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
         }
         if (transaction_board_item_type) {
             query.andWhere('transaction_board.transaction_board_item_type = :transaction_board_item_type', { transaction_board_item_type });
+        }
+
+        if(transaction_completed){
+            query.andWhere('transaction_board.transaction_completed = :transaction_completed', {transaction_completed});
         }
 
         if(filter){

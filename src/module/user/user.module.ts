@@ -7,21 +7,22 @@ import { JwtStrategy } from '../../utils/jwt/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
+import { JwtRefreshTokenStrategy } from 'src/utils/jwt/refresh-token.strategy';
 dotenv.config();
 
 @Module({
   imports: [
-    PassportModule.register({defaultStrategy: 'jwt'}),
+    PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SCRET_KEY,
       signOptions : {
-        expiresIn: 60 * 60,
+        expiresIn: '2h',
       }
     }),
     TypeOrmExModule.forCustomRepository([UserRepository])
   ],
   controllers: [UserController],
-  providers: [UserService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule]
+  providers: [UserService, JwtStrategy,JwtRefreshTokenStrategy],
+  exports: [JwtStrategy, PassportModule, JwtRefreshTokenStrategy]
 })
 export class UserModule {}

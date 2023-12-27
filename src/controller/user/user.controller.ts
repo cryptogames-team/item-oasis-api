@@ -20,7 +20,7 @@ export class UserController {
     @ApiOperation({summary: '유저 생성 및 불러오기(로그인)', description: '유저를 생성하는 API 만약 이미 생성된 이력이 있으면 해당 유저 정보를 불러오는 역할을 함'})
     @ApiCreatedResponse({description:'user와 token 보내줌', type: UserAndAccessToken})
     @ApiBody({ type: UserDto })
-    createOrGetUser(@Body(ValidationPipe)userDto: UserDto): Promise<{accessToken: string, user: User}> {
+    createOrGetUser(@Body(ValidationPipe)userDto: UserDto): Promise<{accessToken: string,refreshToken: string, user: User}> {
         return this.userService.createOrGetUser(userDto);
     }
 
