@@ -1,10 +1,10 @@
 import { Controller, Get, Body, Post, ValidationPipe, Param, Patch, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { winstonLogger } from 'src/utils/logger/logger.util';
-import { UserDto } from '../../dto/user/user.dto';
+import { RefTokenDto, UserDto } from '../../dto/user/user.dto';
 import { UserService } from '../../service/user/user.service';
 import { User } from '../../entity/user/user.entity';
 import { ApiCreatedResponse, ApiOperation, ApiTags, ApiBody } from '@nestjs/swagger';
-import { UserAndAccessToken } from '../../swaggerType/user/user-access_token.type';
+import { AccessToken, UserAndAccessToken } from '../../swaggerType/user/user-access_token.type';
 import UseAuthGuard from '../../auth-guards/use-auth';
 import { FileInterceptor } from '@nestjs/platform-express';
 import AuthUser from 'src/core/auth-user.decorator';
@@ -22,6 +22,13 @@ export class UserController {
     @ApiBody({ type: UserDto })
     createOrGetUser(@Body(ValidationPipe)userDto: UserDto): Promise<{accessToken: string,refreshToken: string, user: User}> {
         return this.userService.createOrGetUser(userDto);
+    }
+
+    @Post('/refreshToken')
+    @ApiOperation({summary: 'accessToken 재발급', description: 'refToken을 바디에 담을 것'})
+    @ApiCreatedResponse({description:'accessToken 보내줌', type: AccessToken})
+    getNewAccessToken(@Body()refToken: RefTokenDto){
+        return this.userService.getNewAccessToken(refToken);
     }
 
     @Get('/:user_name')

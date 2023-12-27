@@ -9,3 +9,10 @@ export class UserDto {
     @ApiProperty({description: '이름'})
     user_name: string;
 }
+
+export class RefTokenDto {
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({description: 'refreshToken'})
+    refToken: string;
+}

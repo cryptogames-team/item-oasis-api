@@ -1,15 +1,18 @@
 import { Injectable, NotFoundException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { UserDto } from '../../dto/user/user.dto';
+import { RefTokenDto, UserDto } from '../../dto/user/user.dto';
 import { User } from '../../entity/user/user.entity';
 import { UserRepository } from '../../repository/user/user.repository';
 import { JwtService } from '@nestjs/jwt';
 import { S3FolderName, mediaUpload } from 'src/utils/s3-util';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class UserService {
     constructor(
         private userRepository: UserRepository,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        @InjectRedis() private client: Redis
     ){}
 
     async createOrGetUser(userDto: UserDto): Promise<{accessToken: string, refreshToken: string, user: User}> {
@@ -26,13 +29,15 @@ export class UserService {
         
         const accessToken = await this.jwtService.sign({ user_name },{
             secret: process.env.JWT_SCRET_KEY,
-            expiresIn: '5s'
+            expiresIn: '1h'
         });
 
         const refreshToken = await this.jwtService.sign({ user_name },{
-            secret: process.env.REFRESH_JWT_SCRET_KEY,
-            expiresIn: '1s'
+            secret: process.env.JWT_SCRET_KEY,
+            expiresIn: '12h'
         });
+
+        this.client.set(refreshToken,user_name, 'EX', 12 * 60 * 60);
 
         return {accessToken,refreshToken, user};
     }
@@ -55,21 +60,26 @@ export class UserService {
         return this.userRepository.uploadProfileImage(user,url);
     }
 
-    // async getNewAccessToken(userAgent: string, refToken: string) {
+    async getNewAccessToken(refreshToken: RefTokenDto) {
+        const { refToken } = refreshToken;
+        const refresh_redis = await this.client.get(refToken);
+
+        if(!refresh_redis){
+            throw new UnauthorizedException('서버에 refreshToken이 없음');  
+        }
+
+        const refreshTokenMatches = await this.jwtService.verify(refToken);
+        if (!refreshTokenMatches) {
+          throw new UnauthorizedException('refreshToken이 재발급 요망');
+        }
     
-    //     const refreshTokenMatches = await this.jwtService.verify(refToken);
-    //     if (!refreshTokenMatches) {
-    //       throw new UnauthorizedException('리플레쉬 토큰 재발급 요망');
-    //     }
+        const accessToken = await this.jwtService.sign({ user_name : refresh_redis },{
+            secret: process.env.JWT_SCRET_KEY,
+            expiresIn: '1h'
+        });
     
-    //     // 3. 액세스토큰 재생성
-    //     const accessToken = await this.jwtService.sign({ user_name },{
-    //         secret: process.env.JWT_SCRET_KEY,
-    //         expiresIn: '5s'
-    //     });
-    
-    //     return {
-    //       accessToken,
-    //     };
-    //   }
+        return {
+            accessToken,
+        };
+      }
 }
