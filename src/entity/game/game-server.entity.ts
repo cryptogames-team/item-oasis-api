@@ -18,9 +18,6 @@ export class GameServer extends BaseEntity {
     @Column()
     game_server_name: string;
 
-    @Column()
-    game_server_id_by_game: number;
-
     @OneToMany(()=> TransactionBoard, transaction_board => transaction_board.game_server_id, {eager : false})
     game_server: GameServer[];
 
