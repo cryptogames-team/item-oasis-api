@@ -48,18 +48,18 @@ export class TransactionBoardController {
         return this.transactionBoardService.getTransactionBoardByID(transaction_board_id);
     }
 
-    @Get('/user/:user_name')
-    @ApiOperation({summary: '유저 거래 게시글 목록 가져오기', description: '설명이 필요하겠노'})
-    @ApiCreatedResponse({description:'배열로 보낼거임', type: [TransactionBoardArrayAndUser]})
-    getTransactionBoardByName(
-        @Param('user_name')user_name: string
-    ):Promise<TransactionBoard[]> {
-        return this.transactionBoardService.getTransactionBoardByName(user_name);
-    }
+    // @Get('/user/:user_name')
+    // @ApiOperation({summary: '유저 거래 게시글 목록 가져오기', description: '설명이 필요하겠노'})
+    // @ApiCreatedResponse({description:'배열로 보낼거임', type: [TransactionBoardArrayAndUser]})
+    // getTransactionBoardByName(
+    //     @Param('user_name')user_name: string
+    // ):Promise<TransactionBoard[]> {
+    //     return this.transactionBoardService.getTransactionBoardByName(user_name);
+    // }
 
     @UseAuthGuard()
     @Delete('/select')
-    @ApiOperation({summary: '선택한 거래 게시글들 삭제', description: '게시글 ID값을 배열로 보낼 것'})
+    @ApiOperation({summary: '선택한 거래 게시글들 삭제', description: `{ "transaction_board_ids" : [아이디들] }`})
     @ApiCreatedResponse({description:'오류 없으면 success가 보내질거임 json형식 아님'})
     async removeTransactionBoardBySelect(
         @Body() body: { transaction_board_ids: number[] },

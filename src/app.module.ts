@@ -9,17 +9,18 @@ import { TransactionBoardModule } from './module/transactionBoard/transaction-bo
 import { GameModule } from './module/game/game.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RedisConfig } from './config/redis.config';
+import { ChatGateway } from './gateway/chat.gateway';
+import { ChatService } from './service/chat/chat.service';
+import { ChatController } from './controller/chat/chat.controller';
+import { ChatModule } from './module/chat/chat.module';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     RedisModule.forRoot({
       readyLog: true,
-      config: {
-        host: process.env.HOST,
-        port: 6379,
-        password: '1207'
-      }
+      config: RedisConfig
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -29,7 +30,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     UserModule,
     TransactionModule,
     TransactionBoardModule,
-    GameModule
+    GameModule,
+    ChatModule
   ]
 })
 export class AppModule {

@@ -40,9 +40,9 @@ export class TransactionBoardService {
         return this.transactionBoardRepository.getTransactionBoardByID(transaction_board_id);
     }
 
-    getTransactionBoardByName(user_name: string): Promise<TransactionBoard[]> {
-        return this.transactionBoardRepository.getTransactionBoardByName(user_name);
-    }
+    // getTransactionBoardByName(user_name: string): Promise<TransactionBoard[]> {
+    //     return this.transactionBoardRepository.getTransactionBoardByName(user_name);
+    // }
 
     async removeTransactionBoardByID(transaction_board_id: number, user: User): Promise<string> {
         await this.transactionBoardRepository.isMyTransactionBoard(transaction_board_id, user.user_id);

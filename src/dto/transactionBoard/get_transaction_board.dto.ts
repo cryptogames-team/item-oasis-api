@@ -40,4 +40,8 @@ export class GetTransactionBoardByItemType {
     @IsNumber()
     @ApiProperty({description: '판매 상태',required : false})
     transaction_completed: number;
+
+    @IsNumber()
+    @ApiProperty({description: '유저 아이디',required: false})
+    user_id: number;
 }

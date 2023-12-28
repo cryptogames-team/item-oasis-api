@@ -24,7 +24,7 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
     }
 
     async getTransactionBoard(params: GetTransactionBoardByItemType): Promise<{board: TransactionBoard[] , count: number}> {
-        const { game_id, game_server_id, transaction_board_title, transaction_completed,
+        const { game_id, game_server_id, transaction_board_title, transaction_completed, user_id,
                 transaction_board_type, transaction_board_item_type, limit, filter, page } = params;
   
         const query = this.createQueryBuilder('transaction_board');
@@ -59,6 +59,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
         }
         if (transaction_board_item_type) {
             query.andWhere('transaction_board.transaction_board_item_type = :transaction_board_item_type', { transaction_board_item_type });
+        }
+        
+        if (user_id) {
+            query.andWhere('transaction_board.user_id = :user_id', {user_id});
         }
 
         if(transaction_completed){
@@ -118,27 +122,27 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
         return found;
     }
 
-    async getTransactionBoardByName(user_name: string): Promise<TransactionBoard[]> {
-        const query = this.createQueryBuilder('transaction_board');
+    // async getTransactionBoardByName(user_name: string): Promise<TransactionBoard[]> {
+    //     const query = this.createQueryBuilder('transaction_board');
 
-        query.select([
-            'transaction_board.transaction_board_id',
-            'transaction_board.transaction_board_title',
-            'transaction_board.transaction_board_min_amount',
-            'transaction_board.transaction_board_amount',
-            'transaction_board.transaction_board_item_price',
-            'transaction_board.transaction_board_date',
-            'transaction_board.user_id',
-            'transaction_board.transaction_board_item_type',
-            'transaction_board.transaction_board_sale_type'
-        ])
-        .leftJoinAndSelect('transaction_board.user_id', 'user')
-        .leftJoinAndSelect('transaction_board.game_id','game')
-        .leftJoinAndSelect('transaction_board.game_server_id','game_server')
-        .andWhere('user.user_name = :user_name', { user_name });
+    //     query.select([
+    //         'transaction_board.transaction_board_id',
+    //         'transaction_board.transaction_board_title',
+    //         'transaction_board.transaction_board_min_amount',
+    //         'transaction_board.transaction_board_amount',
+    //         'transaction_board.transaction_board_item_price',
+    //         'transaction_board.transaction_board_date',
+    //         'transaction_board.user_id',
+    //         'transaction_board.transaction_board_item_type',
+    //         'transaction_board.transaction_board_sale_type'
+    //     ])
+    //     .leftJoinAndSelect('transaction_board.user_id', 'user')
+    //     .leftJoinAndSelect('transaction_board.game_id','game')
+    //     .leftJoinAndSelect('transaction_board.game_server_id','game_server')
+    //     .andWhere('user.user_name = :user_name', { user_name });
 
-        return await query.getMany()
-    }
+    //     return await query.getMany()
+    // }
 
     async isMyTransactionBoard(transaction_board_id: number, user_id: number) {
         await this.getTransactionBoardByID(transaction_board_id);
