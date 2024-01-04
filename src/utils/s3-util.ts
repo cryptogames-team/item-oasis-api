@@ -41,7 +41,8 @@ export const asyncUploadToS3 = async (
 export enum S3FolderName {
   PROFILE = 'item-oasis/profileImage',
   Board = 'item-oasis/boardImage',
-  TransactionBoard = 'item-oasis/transactionBoardImage'
+  TransactionBoard = 'item-oasis/transactionBoardImage',
+  Chat = 'item-oasis/chat'
 }
 
 export const mediaUpload = async (
