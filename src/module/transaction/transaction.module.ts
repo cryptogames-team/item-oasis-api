@@ -6,10 +6,11 @@ import { TransactionBoardRepository } from '../../repository/transactionBoard/tr
 import { UserModule } from '../user/user.module';
 import { TransactionDetailImageRepository } from '../../repository/transactionBoard/transaction-detail-image.repository';
 import { UserRepository } from 'src/repository/user/user.repository';
+import { ChatRepository } from 'src/repository/chat/chat.repository';
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([UserRepository]),
+    TypeOrmExModule.forCustomRepository([UserRepository,ChatRepository]),
     UserModule
   ],
   controllers: [TransactionController],

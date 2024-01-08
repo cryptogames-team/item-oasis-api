@@ -19,8 +19,10 @@ export class TransactionController {
     @Post('/')
     @ApiOperation({summary: '거래 등록', description: ''})
     @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
-    create(@Body(ValidationPipe)transactionDTO: TransactionDTO){
-        return this.transactionService.create(transactionDTO);
+    create(
+        @Body(ValidationPipe)transactionDTO: TransactionDTO,
+        @AuthUser()user: User){
+        return this.transactionService.create(transactionDTO,user);
     }
 
     @UseAuthGuard()

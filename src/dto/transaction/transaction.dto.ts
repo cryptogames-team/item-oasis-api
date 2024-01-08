@@ -14,5 +14,11 @@ export class TransactionDTO {
     @ApiProperty({description: '가격'})
     price: string;
 
+    @ApiProperty({description: '게임 id'})
+    game_id: number;
+
+    @ApiProperty({description: '구매 갯수'})
+    item_count: number;
+
     date: number;
 }

@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 @CustomRepository(Chat)
 export class ChatRepository extends Repository<Chat> {
 
-    async getChatByRoom(chat_room: number){
+    async getChatByRoom(chat_room: number): Promise<Chat[]>{
         const query = this.createQueryBuilder('chat')
         .leftJoinAndSelect('chat.user_id', 'user');
         query.andWhere('chat.chat_room = :chat_room', { chat_room });
@@ -33,13 +33,10 @@ export class ChatRepository extends Repository<Chat> {
 
     async getChatRoomTitle(chat_room: string){
 
-        return await this.find({
-            where: { chat_room },
-            order: { chat_id: 'DESC' },
-            take: 1,
-          });
-
-
+        const query = this.createQueryBuilder('chat');
+        query.andWhere('chat.chat_room = :chat_room', { chat_room });
+        query.orderBy('chat.chat_id', 'DESC'); 
+        return query.getOne();
     }
 
 }

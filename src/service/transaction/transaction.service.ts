@@ -7,6 +7,7 @@ import { UserRepository } from 'src/repository/user/user.repository';
 import DateUtils from 'src/utils/date-util';
 import { Cron } from '@nestjs/schedule';
 import { winstonLogger } from 'src/utils/logger/logger.util';
+import { ChatRepository } from 'src/repository/chat/chat.repository';
 
 @Injectable()
 export class TransactionService {
@@ -15,7 +16,8 @@ export class TransactionService {
     private hep: Api;
     
     constructor(
-        private userRepository: UserRepository
+        private userRepository: UserRepository,
+        private chatRepository: ChatRepository
     ){
         this.rpc = new JsonRpc('http://14.63.34.160:8888');
         this.signatureProvider = new JsSignatureProvider([process.env.CONTRACT_PRIVATE_KEY]);
@@ -28,18 +30,18 @@ export class TransactionService {
 
     async getTableBySeller(seller: string){
         try{
-        const response = await this.rpc.get_table_rows({
-            json: true,
-            code: process.env.CONTRACT_ACCOUNT_NAME,
-            scope: process.env.CONTRACT_ACCOUNT_NAME, 
-            table: 'transactions',
-            lower_bound : seller,
-            upper_bound : seller,
-            index_position : 2,
-            key_type : 'name',
-            limit: 100
-          });
-          return response.rows;
+            const response = await this.rpc.get_table_rows({
+                json: true,
+                code: process.env.CONTRACT_ACCOUNT_NAME,
+                scope: process.env.CONTRACT_ACCOUNT_NAME, 
+                table: 'transactions',
+                lower_bound : seller,
+                upper_bound : seller,
+                index_position : 2,
+                key_type : 'name',
+                limit: 100
+            });
+            return response.rows;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -64,7 +66,8 @@ export class TransactionService {
             }
     }
 
-    async create(transactionDTO: TransactionDTO){
+    async create(transactionDTO: TransactionDTO,user: User){
+        const { user_name, user_id } = user;
         const now_date = DateUtils.momentBlockchain();
         transactionDTO.date = now_date;
         try{
@@ -82,6 +85,20 @@ export class TransactionService {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
+
+            const result_table = await this.getTableByBuyer(user_name);
+            const sorted_table = result_table.sort((a, b)=>{
+                return b.transaction_id - a.transaction_id
+            })
+            console.log(sorted_table[0])
+            const chatDTO = {
+                chat_content : ".",
+                chat_room : sorted_table[0].transaction_id,
+                user_id,
+                chat_type : 2,
+                chat_date : DateUtils.momentNow()
+            }
+            this.chatRepository.addChat(chatDTO);
             return result;
         }catch(error){
             console.log(error)
