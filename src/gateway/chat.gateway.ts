@@ -38,6 +38,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     });
   }
 
+  //최초 연결 시 보내셈
   @SubscribeMessage('set_user_id')
   setName(client: Socket, user_id: number): void {
     console.log(user_id)
@@ -45,6 +46,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.clientids[user_id] = client.id;
   }
 
+  //채팅방 들어갈 때
   @SubscribeMessage('join')
   handleJoin(client: Socket, room: string): void {
     if(client.rooms.has(room)){
@@ -59,6 +61,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.roomUsers[room].push(this.clientuserid[client.id]);
   }
 
+  //채팅방 나갈 때
   @SubscribeMessage('exit')
   handleExit(client: Socket, room: string): void {
     if (!client.rooms.has(room)) {
@@ -72,6 +75,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   }
 
+  //채팅
   @SubscribeMessage('chatMessage')
   async handleChatMessage(
     client: Socket, data : {chatDTO: ChatDTO, recieverId: number }
