@@ -3,7 +3,7 @@ import { winstonLogger } from 'src/utils/logger/logger.util';
 import { RefTokenDto, UserDto } from '../../dto/user/user.dto';
 import { UserService } from '../../service/user/user.service';
 import { User } from '../../entity/user/user.entity';
-import { ApiCreatedResponse, ApiOperation, ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AccessToken, UserAndAccessToken } from '../../swaggerType/user/user-access_token.type';
 import UseAuthGuard from '../../auth-guards/use-auth';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -33,6 +33,7 @@ export class UserController {
 
     @Post('/logout')
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @ApiOperation({summary: '로그아웃', description: '헤더에 access토큰 담을 것'})
     @ApiCreatedResponse({description:'success'})
     logout(
@@ -49,6 +50,7 @@ export class UserController {
 
     @Patch('/')
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @UseInterceptors(FileInterceptor('file'))
     @ApiOperation({summary: '프로필 사진 수정 API', description: '이미지 파일도 담아서 보내야함, 토큰도 포함해서'})
     @ApiCreatedResponse({description:'유저 정보 보내줌', type : User})
