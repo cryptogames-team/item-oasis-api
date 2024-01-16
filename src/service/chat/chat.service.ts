@@ -15,7 +15,7 @@ export class ChatService {
         private userRepository: UserRepository,
         private transactionBoardRepository: TransactionBoardRepository
     ){
-        this.rpc = new JsonRpc('http://14.63.34.160:8888');
+        this.rpc = new JsonRpc('https://heptagon-producer1.store');
     }
 
     addChat(chatDTO: ChatDTO){
@@ -24,6 +24,10 @@ export class ChatService {
 
     getChatByRoom(chat_room: number): Promise<Chat[]> {
         return this.chatRepository.getChatByRoom(chat_room);
+    }
+
+    readMessage(chat_room: string,user_id: number){
+        this.chatRepository.readMessage(chat_room,user_id);
     }
 
     async getBuyerTable(buyer: string){
@@ -112,11 +116,11 @@ export class ChatService {
         for(const chat_room of chat_rooms){
             if(+sale_type === 0){
                 if(chat_room.trasaction_completed === 0){
-                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name));
+                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
                 }
             }else {
                 if(chat_room.trasaction_completed === 1){
-                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name));
+                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
                 }
             }
                 
@@ -129,14 +133,15 @@ export class ChatService {
         return result;
     }
 
-    async getTitleByTransaction(chat_room, user_name){
-        const chat = await this.chatRepository.getChatRoomTitle(chat_room.transaction_id);
+    async getTitleByTransaction(chat_room, user_name: string,user_id: number){
+        const chat = await this.chatRepository.getChatRoomTitle(chat_room.transaction_id,user_id);
         let other_name;
         if(chat_room.seller === user_name){
             other_name = chat_room.buyer;
         }else {
             other_name = chat_room.seller;
         }
+        const count = await this.chatRepository.checkUnRead(chat_room.transaction_id,user_id);
         const other_user = await this.userRepository.getUser(other_name);
         const transaction_board = await this.transactionBoardRepository.getTransactionBoardByID(chat_room.transaction_board_id);
         const new_data = {
@@ -155,7 +160,8 @@ export class ChatService {
             chat : chat,
             user : other_user,
             game_server : transaction_board.game_server_id,
-            item_type : transaction_board.transaction_board_item_type
+            item_type : transaction_board.transaction_board_item_type,
+            unread_count : count
         }
         
         return new_data;
