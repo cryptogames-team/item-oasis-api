@@ -14,6 +14,7 @@ import { ChatGateway } from './gateway/chat.gateway';
 import { ChatService } from './service/chat/chat.service';
 import { ChatController } from './controller/chat/chat.controller';
 import { ChatModule } from './module/chat/chat.module';
+import { SearchModule } from './module/search/search.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { ChatModule } from './module/chat/chat.module';
     TransactionModule,
     TransactionBoardModule,
     GameModule,
-    ChatModule
+    ChatModule,
+    SearchModule
   ]
 })
 export class AppModule {
