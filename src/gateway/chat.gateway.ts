@@ -4,7 +4,14 @@ import { ChatService } from '../service/chat/chat.service';
 import DateUtils from 'src/utils/date-util';
 import { ChatDTO } from 'src/dto/chat/chat.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["authorization", "Authorization"],
+    credentials: true,
+  }
+})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
@@ -22,6 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket): void {
 
     this.connectedClients[client.id] = true;
+    console.log("소켓 연결", client.id);
   }
 
   handleDisconnect(client: Socket): void {
@@ -57,6 +65,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.roomUsers[room] = [];
     }
     this.roomUsers[room].push(this.clientuserid[client.id]);
+    console.log("room 유저 ", this.roomUsers[room]);
   }
 
   @SubscribeMessage('exit')
@@ -80,6 +89,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { chatDTO, recieverId } = data;
     console.log(data)
     const { chat_room } = chatDTO;
+    console.log("chat room",chat_room) 
     const index = this.roomUsers[chat_room]?.indexOf(recieverId.toString());
     const date = DateUtils.momentNow();
     if(index !== -1){
