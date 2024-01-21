@@ -26,6 +26,10 @@ export class Chat extends BaseEntity {
     chat_room: string;
 
     @ApiProperty()
+    @Column()
+    is_read: number;
+
+    @ApiProperty()
     @ManyToOne(()=> User, user => user.transaction_board, {eager: false})
     @JoinColumn({name: "user_id"})
     user_id: number;

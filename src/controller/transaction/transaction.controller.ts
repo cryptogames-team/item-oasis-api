@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get, Patch, ValidationPipe, Param } from '@nestjs/common';
 import { TransactionService } from '../../service/transaction/transaction.service';
 import { TransactionDTO } from 'src/dto/transaction/transaction.dto';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import UseAuthGuard from 'src/auth-guards/use-auth';
 import AuthUser from 'src/core/auth-user.decorator';
 import { User } from 'src/entity/user/user.entity';
@@ -17,6 +17,7 @@ export class TransactionController {
     
     @UseAuthGuard()
     @Post('/')
+    @ApiBearerAuth('access-token')
     @ApiOperation({summary: '거래 등록', description: ''})
     @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
     create(
@@ -26,6 +27,7 @@ export class TransactionController {
     }
 
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Patch('/buy/:transaction_id')
     @ApiOperation({summary: '구매 확정', description: ''})
     @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
@@ -35,6 +37,7 @@ export class TransactionController {
         return this.transactionService.buyConfirmed(transaction_id,user);
     }
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Patch('/sell/:transaction_id')
     @ApiOperation({summary: '판매 확정', description: ''})
     @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})
@@ -44,6 +47,7 @@ export class TransactionController {
         return this.transactionService.saleConfirmed(transaction_id,user);
     }
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Patch('/fraud/:transaction_id')
     @ApiOperation({summary: '사기 등록', description: ''})
     @ApiCreatedResponse({description:'트랜잭션 결과가 보내질 것'})

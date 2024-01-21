@@ -19,7 +19,7 @@ export class TransactionService {
         private userRepository: UserRepository,
         private chatRepository: ChatRepository
     ){
-        this.rpc = new JsonRpc('http://14.63.34.160:8888');
+        this.rpc = new JsonRpc('https:/heptagon-producer1.store');
         this.signatureProvider = new JsSignatureProvider([process.env.CONTRACT_PRIVATE_KEY]);
         this.hep = new Api({
             rpc: this.rpc,
@@ -96,7 +96,8 @@ export class TransactionService {
                 chat_room : sorted_table[0].transaction_id,
                 user_id,
                 chat_type : 2,
-                chat_date : DateUtils.momentNow()
+                chat_date : DateUtils.momentNow(),
+                is_read : 1
             }
             this.chatRepository.addChat(chatDTO);
             return result;

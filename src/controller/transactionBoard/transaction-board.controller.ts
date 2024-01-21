@@ -2,7 +2,7 @@ import { Body, Controller, Post, Patch, Get, Delete, ValidationPipe, Param, Quer
 import { TransactionBoardService } from '../../service/transactionBoard/transaction-board.service';
 import UseAuthGuard from 'src/auth-guards/use-auth';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TransactionBoardAndUser, TransactionBoardArrayAndUser } from '../../swaggerType/transactionBoard/getBoard.type';
 import AuthUser from 'src/core/auth-user.decorator';
 import { TransactionBoardDTO } from '../../dto/transactionBoard/transaction_board.dto';
@@ -20,6 +20,7 @@ export class TransactionBoardController {
     
     @UseAuthGuard()
     @Post('/')
+    @ApiBearerAuth('access-token')
     @UseInterceptors(FilesInterceptor('file',3))
     @ApiOperation({summary: '거래 게시판 만들기', description: '엑세스토큰 포함시킬것'})
     @ApiCreatedResponse({description:'transaction_detail_image 이거 배열로 갈거임', type: TransactionBoardAndUser})
@@ -58,6 +59,7 @@ export class TransactionBoardController {
     // }
 
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Delete('/select')
     @ApiOperation({summary: '선택한 거래 게시글들 삭제', description: `{ "transaction_board_ids" : [아이디들] }`})
     @ApiCreatedResponse({description:'오류 없으면 success가 보내질거임 json형식 아님'})
@@ -75,6 +77,7 @@ export class TransactionBoardController {
     }
 
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Delete('/:transaction_board_id')
     @ApiOperation({summary: '특정 거래 게시글 삭제', description: '게시글 ID값으로 보낼 것'})
     @ApiCreatedResponse({description:'오류 없으면 delete success가 보내질거임 json형식 아님'})
@@ -88,6 +91,7 @@ export class TransactionBoardController {
 
     
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Put('/:transaction_board_id')
     @UseInterceptors(FilesInterceptor('file',3))
     @ApiOperation({summary: '특정 거래 게시글 수정', description: '게시글 ID값은 param으로 게시글 내용은 body에 담을 것'})
@@ -102,6 +106,7 @@ export class TransactionBoardController {
     }
 
     @UseAuthGuard()
+    @ApiBearerAuth('access-token')
     @Patch('/:transaction_board_id/:transaction_completed')
     @ApiOperation({summary: '거래게시판 거래 확정', description: ''})
     @ApiCreatedResponse({description:'오류 없으면 게시글 ID값이 보내질거임 json형식 아님'})
