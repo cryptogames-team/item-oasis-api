@@ -6,7 +6,7 @@ import { ChatDTO } from 'src/dto/chat/chat.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["authorization", "Authorization"],
     credentials: true,
