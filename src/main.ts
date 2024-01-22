@@ -8,7 +8,10 @@ async function bootstrap() {
     logger: winstonLogger
   });
   setupSwagger(app);
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   await app.listen(process.env.PORT);
 }
 bootstrap();

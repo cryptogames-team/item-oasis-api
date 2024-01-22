@@ -4,7 +4,14 @@ import { ChatService } from '../service/chat/chat.service';
 import DateUtils from 'src/utils/date-util';
 import { ChatDTO } from 'src/dto/chat/chat.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["authorization", "Authorization"],
+    credentials: true,
+  }
+})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
@@ -22,6 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket): void {
 
     this.connectedClients[client.id] = true;
+    console.log("소켓 연결", client.id);
   }
 
   handleDisconnect(client: Socket): void {
@@ -59,6 +67,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.roomUsers[room] = [];
     }
     this.roomUsers[room].push(this.clientuserid[client.id]);
+    console.log("room 유저 ", this.roomUsers[room]);
     //방에 접속하면 방에 있는 유저들에게 방 접속 리스트를 보냄
     //보내는 이유는 만약 방에 상대방이 접속해 있으면 내가 보낸 메시지의 읽음은 0이 되게 프론트 작업하면 됨
     //상대방이 접속할 때 마다 db에서 불러올 수는 없으니까
@@ -91,6 +100,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ): Promise<void> {
     const { chatDTO, recieverId } = data;
     const { chat_room } = chatDTO;
+    console.log("chat room",chat_room) 
     const index = this.roomUsers[chat_room]?.indexOf(recieverId.toString());
     const date = DateUtils.momentNow();
     data.chatDTO.chat_date = date.toString();
