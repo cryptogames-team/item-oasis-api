@@ -68,8 +68,10 @@ export class TransactionService {
 
     async create(transactionDTO: TransactionDTO,user: User){
         const { user_name, user_id } = user;
+        const { seller, buyer, transaction_board_id, price, game_id, item_count, game_server, item_type, date } = transactionDTO;
         const now_date = DateUtils.momentBlockchain();
         transactionDTO.date = now_date;
+        console.log(transactionDTO)
         try{
             const result = await this.hep.transact({
                 actions: [{
@@ -79,14 +81,25 @@ export class TransactionService {
                       actor: process.env.CONTRACT_ACCOUNT_NAME,  
                       permission: 'active',
                     }],
-                    data: transactionDTO
+                    data: {
+                        seller,
+                        buyer,
+                        transaction_board_id,
+                        price,
+                        date: now_date,
+                        game_id,
+                        item_count,
+                        game_server,
+                        item_type
+                    }
                   }]    
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
 
-            const result_table = await this.getTableByBuyer(user_name);
+            const result_table = await this.getTableBySeller(user_name);
+            console.log(result_table)
             const sorted_table = result_table.sort((a, b)=>{
                 return b.transaction_id - a.transaction_id
             })

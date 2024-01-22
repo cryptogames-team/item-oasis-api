@@ -24,7 +24,7 @@ export default class DateUtils {
 
   // ex) 20230517165408
   static momentBlockchain(): number {
-    return parseInt(moment().tz('Asia/Seoul').format('YYYYMMDDHHmmss'));
+    return parseInt(moment().tz('Asia/Seoul').format('YYYYMMDDHHmm'));
   }
 
   static momentBlockchainD9(): number {
