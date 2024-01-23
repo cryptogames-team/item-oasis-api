@@ -7,6 +7,8 @@ import { UserModule } from '../user/user.module';
 import { TransactionDetailImageRepository } from '../../repository/transactionBoard/transaction-detail-image.repository';
 import { UserRepository } from 'src/repository/user/user.repository';
 import { ChatRepository } from 'src/repository/chat/chat.repository';
+import { GameRepository } from 'src/repository/game/game.repository';
+import { GameServerRepository } from 'src/repository/game/game-server.repository';
 
 @Module({
   imports: [

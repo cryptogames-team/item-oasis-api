@@ -11,5 +11,7 @@ export class GameServerRepository extends Repository<GameServer> {
 
         return await query.getMany();
     }
-
+    async getByID(game_server_id: number){
+        return await this.findOne({where: {game_server_id}});
+    }
 }

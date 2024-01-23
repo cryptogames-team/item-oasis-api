@@ -4,14 +4,7 @@ import { ChatService } from '../service/chat/chat.service';
 import DateUtils from 'src/utils/date-util';
 import { ChatDTO } from 'src/dto/chat/chat.dto';
 
-@WebSocketGateway({
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["authorization", "Authorization"],
-    credentials: true,
-  }
-})
+@WebSocketGateway({cors: true,namespace: 'chat'})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(

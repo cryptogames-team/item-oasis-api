@@ -3,6 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { GameServer } from "./game-server.entity";
 import { TransactionBoard } from "../transactionBoard/transaction-board.entity";
 
+
 @Entity({name: 'game_info'})
 export class GameInfo extends BaseEntity {
     @ApiProperty()
@@ -18,4 +19,6 @@ export class GameInfo extends BaseEntity {
 
     @OneToMany(()=> TransactionBoard, transaction_board => transaction_board.game_id, {eager : false})
     game: GameInfo;
+
+
 }

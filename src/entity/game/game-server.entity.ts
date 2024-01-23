@@ -3,6 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { GameInfo } from "./game.entity";
 import { TransactionBoard } from "../transactionBoard/transaction-board.entity";
 
+
 @Entity({name: 'game_server'})
 export class GameServer extends BaseEntity {
     @ApiProperty()

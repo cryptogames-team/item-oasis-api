@@ -9,6 +9,7 @@ import { Cron } from '@nestjs/schedule';
 import { winstonLogger } from 'src/utils/logger/logger.util';
 import { ChatRepository } from 'src/repository/chat/chat.repository';
 
+
 @Injectable()
 export class TransactionService {
     private rpc: JsonRpc;
@@ -68,9 +69,8 @@ export class TransactionService {
 
     async create(transactionDTO: TransactionDTO,user: User){
         const { user_name, user_id } = user;
-        const { seller, buyer, transaction_board_id, price, game_id, item_count, game_server, item_type, date } = transactionDTO;
+        const { seller, transaction_board_id, price, game_id, item_count, game_server_id, item_type} = transactionDTO;
         const now_date = DateUtils.momentBlockchain();
-        transactionDTO.date = now_date;
         console.log(transactionDTO)
         try{
             const result = await this.hep.transact({
@@ -83,13 +83,13 @@ export class TransactionService {
                     }],
                     data: {
                         seller,
-                        buyer,
+                        buyer: user_name,
                         transaction_board_id,
                         price,
                         date: now_date,
                         game_id,
                         item_count,
-                        game_server,
+                        game_server: game_server_id,
                         item_type
                     }
                   }]    
@@ -98,7 +98,7 @@ export class TransactionService {
                 expireSeconds: 30,
             });
 
-            const result_table = await this.getTableBySeller(user_name);
+            const result_table = await this.getTableByBuyer(user_name);
             console.log(result_table)
             const sorted_table = result_table.sort((a, b)=>{
                 return b.transaction_id - a.transaction_id
