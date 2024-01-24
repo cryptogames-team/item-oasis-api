@@ -26,6 +26,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket): void {
+    console.log("소켓 끊김", client.id);
     delete this.connectedClients[client.id];
 
     Object.keys(this.roomUsers).forEach((room) => {
