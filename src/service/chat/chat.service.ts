@@ -43,8 +43,12 @@ export class ChatService {
                 key_type : 'name',
                 limit: 100
               });
-              console.log(response)
-              return response.rows;
+              if(response.rows){
+                return response.rows;
+              }else{
+                return [];
+              }
+              
             } catch (error) {
               console.error('Error:', error);
             }
@@ -63,8 +67,12 @@ export class ChatService {
                 key_type : 'name',
                 limit: 100
             });
-            console.log(response)
-            return response.rows;
+
+            if(response.rows){
+                return response.rows;
+              }else{
+                return [];
+              }
         } catch (error) {
           console.error('Error:', error);
         }
@@ -77,16 +85,21 @@ export class ChatService {
             if(+type === 0){
                 const buyer_table = await this.getBuyerTable(user_name);
                 const seller_table = await this.getSellerTable(user_name);
-                if(buyer_table.length > 0) {
-                    for(const table of buyer_table){
-                        chat_rooms.push(table);
-                    } 
+                if(buyer_table){
+                    if(buyer_table.length > 0) {
+                        for(const table of buyer_table){
+                            chat_rooms.push(table);
+                        } 
+                    }
                 }
-                if(seller_table.length > 0) {
-                    for(const table of seller_table){
-                        chat_rooms.push(table);
-                    } 
+                if(seller_table){
+                    if(seller_table.length > 0) {
+                        for(const table of seller_table){
+                            chat_rooms.push(table);
+                        } 
+                    }
                 }
+                
             }
             if(+type === 1){
                 const seller_table = await this.getSellerTable(user_name);
@@ -116,17 +129,24 @@ export class ChatService {
         for(const chat_room of chat_rooms){
             if(+sale_type === 0){
                 if(chat_room.transaction_completed === 0){
-                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
+                    const titles = await this.getTitleByTransaction(chat_room,user_name,user_id);
+                    if(titles.chat){
+                        chat_titles.push(titles);
+                    }  
                 }
             }else {
                 if(chat_room.transaction_completed === 1){
-                    chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
+                    const titles = await this.getTitleByTransaction(chat_room,user_name,user_id);
+                    if(titles.chat){
+                        chat_titles.push(titles);
+                    }
                 }
             }
                 
         }
  
         const result = chat_titles.sort((a,b) => {
+            console.log(a)
             const dateA = new Date(a.chat.chat_date).getTime();
             const dateB = new Date(b.chat.chat_date).getTime();
             return dateB - dateA;
