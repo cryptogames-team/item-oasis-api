@@ -152,7 +152,7 @@ export class ChatService {
             buyer : chat_room.buyer,
             buy_confirmation : chat_room.buy_confirmation,
             sell_confirmation : chat_room.sell_confirmation,
-            transaction_completed : chat_room.trasaction_completed,
+            transaction_completed : chat_room.transaction_completed,
             is_fraud : chat_room.is_fraud,
             transaction_board_id : chat_room.transaction_board_id,
             price: chat_room.price,
