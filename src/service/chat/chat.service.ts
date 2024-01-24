@@ -115,21 +115,23 @@ export class ChatService {
         let chat_titles = [];
         for(const chat_room of chat_rooms){
             if(+sale_type === 0){
-                if(chat_room.trasaction_completed === 0){
+                if(chat_room.transaction_completed === 0){
                     chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
                 }
             }else {
-                if(chat_room.trasaction_completed === 1){
+                if(chat_room.transaction_completed === 1){
                     chat_titles.push(await this.getTitleByTransaction(chat_room,user_name,user_id));
                 }
             }
                 
         }
+ 
         const result = chat_titles.sort((a,b) => {
             const dateA = new Date(a.chat.chat_date).getTime();
             const dateB = new Date(b.chat.chat_date).getTime();
             return dateB - dateA;
         })
+        
         return result;
     }
 
