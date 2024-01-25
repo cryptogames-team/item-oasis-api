@@ -22,11 +22,9 @@ jobs:
         #       node-version: 16.x
       
           - name: Install dependencies
-            working-directory: /var/www/html/item-oasis-api
             run: npm install
 
           - name: build dependencies
-            working-directory: /var/www/html/item-oasis-api
             run: npm build  
               
         #   - name: Stop old server (ignore error)
