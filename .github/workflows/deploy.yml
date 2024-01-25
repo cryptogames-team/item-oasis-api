@@ -1,0 +1,50 @@
+name: deploy
+
+on:
+    push:
+        branches: 
+            - "main"
+jobs:
+    checkout:
+        runs-on: [self-hosted]
+        steps:
+            - name: 🛒 Checkout
+              uses: actions/checkout@v2
+
+    build:
+        needs: checkout
+        if: github.ref == 'refs/heads/main'
+        runs-on: [self-hosted]
+        steps:
+        #   - name: Use Node.js 16.x
+        #     uses: actions/setup-node@v1
+        #     with:
+        #       node-version: 16.x
+      
+          - name: Install dependencies
+            working-directory: /var/www/html/item-oasis-api
+            run: npm install
+
+          - name: build dependencies
+            working-directory: /var/www/html/item-oasis-api
+            run: npm build  
+              
+        #   - name: Stop old server (ignore error)
+        #     run: |
+        #       killall -9 node || true
+      
+        #   - name: Remove old server in ~/soruce (ignore error)
+        #     run: |
+        #       rm -rf ~/source || true
+      
+        #   - name: Copy new server to ~/soruce
+        #     run: |
+        #       mkdir -p ~/source
+        #       cp -R ./ ~/source
+              
+        #   - name: Run new server (in background)
+        #     env:
+        #       RUNNER_TRACKING_ID: ""
+        #     run: |
+        #       cd ~/source
+        #       nohup npm run start </dev/null >/dev/null 2>&1 &
