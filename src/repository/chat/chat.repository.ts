@@ -8,7 +8,8 @@ import { Repository } from "typeorm";
 export class ChatRepository extends Repository<Chat> {
 
     async getChatByRoom(chat_room: number): Promise<Chat[]>{
-        const query = this.createQueryBuilder('chat');
+        const query = this.createQueryBuilder('chat')
+        .leftJoinAndSelect('chat.user_id', 'user');
         query.andWhere('chat.chat_room = :chat_room', { chat_room });
         query.orderBy('chat.chat_id', 'DESC'); 
 
