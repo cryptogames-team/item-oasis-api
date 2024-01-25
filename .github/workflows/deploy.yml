@@ -28,7 +28,7 @@ jobs:
             run: npm install
 
           - name: build dependencies
-            run: npm build  
+            run: npm run build  
               
         #   - name: Stop old server (ignore error)
         #     run: |
