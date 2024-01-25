@@ -22,7 +22,7 @@ jobs:
         #       node-version: 16.x
             - name: 🚀 with_lite_build
               run: |
-                echo '러너테스트'
+                echo '러너테스트ss'
                    
         #   - name: Install dependencies
         #     run: npm install
