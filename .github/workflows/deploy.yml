@@ -20,12 +20,14 @@ jobs:
         #     uses: actions/setup-node@v1
         #     with:
         #       node-version: 16.x
-      
-          - name: Install dependencies
-            run: npm install
+            - name: create env file
+              run: |
+                touch .env.prod   
+        #   - name: Install dependencies
+        #     run: npm install
 
-          - name: build dependencies
-            run: npm build  
+        #   - name: build dependencies
+        #     run: npm build  
               
         #   - name: Stop old server (ignore error)
         #     run: |
