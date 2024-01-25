@@ -20,9 +20,10 @@ jobs:
         #     uses: actions/setup-node@v1
         #     with:
         #       node-version: 16.x
-            - name: create env file
+            - name: 🚀 with_lite_build
               run: |
-                touch .env.prod   
+                echo '러너테스트'
+                   
         #   - name: Install dependencies
         #     run: npm install
 
