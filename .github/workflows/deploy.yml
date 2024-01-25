@@ -23,17 +23,14 @@ jobs:
             # - name: 🚀 with_lite_build
             #   run: |
             #     echo '러너테스트ss'
-                   
+
           - name: Install dependencies
-            working-directory: /var/www/html/item-oasis-api
             run: npm install
 
           - name: build dependencies
-            working-directory: /var/www/html/item-oasis-api
             run: npm run build  
               
           - name: create env file
-            working-directory: /var/www/html/item-oasis-api
             run: |
                 touch ./dist/.env
                     echo HOST = '43.200.195.138' >> ./dist/.env
@@ -53,6 +50,10 @@ jobs:
                     echo PORT = '1207' >> ./dist/.env
                     echo CONTRACT_PRIVATE_KEY = '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3' >> ./dist/.env
                     echo CONTRACT_ACCOUNT_NAME = 'eosio.item' >> ./dist/.env
+                    
+          - name: Copy new server to html
+            run: |
+                cp -R ./ /var/www/html/item-oasis-api
         #   - name: Stop old server (ignore error)
         #     run: |
         #       killall -9 node || true
