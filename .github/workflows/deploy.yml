@@ -15,15 +15,8 @@ jobs:
         needs: checkout
         if: github.ref == 'refs/heads/main'
         runs-on: [self-hosted]
+        
         steps:
-        #   - name: Use Node.js 16.x
-        #     uses: actions/setup-node@v1
-        #     with:
-        #       node-version: 16.x
-            # - name: 🚀 with_lite_build
-            #   run: |
-            #     echo '러너테스트ss'
-
           - name: Install dependencies
             run: npm install
 
@@ -54,22 +47,6 @@ jobs:
           - name: Copy new server to html folder
             run: |
                 cp -R ./ /var/www/html/item-oasis-api
-        #   - name: Stop old server (ignore error)
-        #     run: |
-        #       killall -9 node || true
-      
-        #   - name: Remove old server in ~/soruce (ignore error)
-        #     run: |
-        #       rm -rf ~/source || true
-      
-        #   - name: Copy new server to ~/soruce
-        #     run: |
-        #       mkdir -p ~/source
-        #       cp -R ./ ~/source
-              
-        #   - name: Run new server (in background)
-        #     env:
-        #       RUNNER_TRACKING_ID: ""
-        #     run: |
-        #       cd ~/source
-        #       nohup npm run start </dev/null >/dev/null 2>&1 &
+
+          - name: pm2 restart
+            run: pm2 restart item-oasis-api 

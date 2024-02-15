@@ -16,3 +16,10 @@ export class RefTokenDto {
     @ApiProperty({description: 'refreshToken'})
     refToken: string;
 }
+
+export class AccessAndRefTokenDto extends RefTokenDto {
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({description: 'accessToken'})
+    accessToken: string;
+}

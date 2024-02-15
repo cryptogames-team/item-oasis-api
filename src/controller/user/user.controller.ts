@@ -1,6 +1,6 @@
 import { Controller, Get, Body, Post, ValidationPipe, Param, Patch, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { winstonLogger } from 'src/utils/logger/logger.util';
-import { RefTokenDto, UserDto } from '../../dto/user/user.dto';
+import { AccessAndRefTokenDto, RefTokenDto, UserDto } from '../../dto/user/user.dto';
 import { UserService } from '../../service/user/user.service';
 import { User } from '../../entity/user/user.entity';
 import { ApiCreatedResponse, ApiOperation, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
@@ -29,6 +29,15 @@ export class UserController {
     @ApiCreatedResponse({description:'accessToken 보내줌', type: AccessToken})
     getNewAccessToken(@Body()refToken: RefTokenDto){
         return this.userService.getNewAccessToken(refToken);
+    }
+
+    @Post('/check')
+    @ApiOperation({summary: 'accessToken 확인', description: '헤더에 access토큰 담을 것'})
+    @ApiCreatedResponse({description:'유저 정보 보내줌', type: User})
+    @ApiBearerAuth('access-token')
+    @UseAuthGuard()
+    check(@AuthUser()user: User){
+        return user;
     }
 
     @Post('/logout')

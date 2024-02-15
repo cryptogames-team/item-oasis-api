@@ -15,8 +15,10 @@ export class LoggerMiddleware implements NestMiddleware {
         const decodeToken = jwt.verify(token,process.env.JWT_SCRET_KEY) as {user_name: string}
         winstonLogger.log(`[${method}]${originalUrl} ${ip} ${decodeToken.user_name}`);
       }catch(error){
-
+        winstonLogger.log(`[${method}]${originalUrl} ${ip} ${userAgent}`);
       }
+    }else {
+      winstonLogger.log(`[${method}]${originalUrl} ${ip} ${userAgent}`);
     }
     res.on('finish', () => {
       const { statusCode } = res;
