@@ -14,7 +14,9 @@ export class Chat extends BaseEntity {
 
 
     @ApiProperty()
-    @Column()
+    @Column({
+        type: "text"
+    })
     chat_content: string;
 
     @ApiProperty()
