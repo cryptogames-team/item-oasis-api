@@ -186,7 +186,7 @@ export class TransactionService {
                 limit: 1
               });
             if(response.rows.length > 0){
-                if(response.rows[0].buyer === user_name) {
+                if(response.rows[0].seller === user_name) {
                     const result = await this.hep.transact({
                         actions: [{
                             account: process.env.CONTRACT_ACCOUNT_NAME,
