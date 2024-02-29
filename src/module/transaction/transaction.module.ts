@@ -12,7 +12,7 @@ import { GameServerRepository } from 'src/repository/game/game-server.repository
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([UserRepository,ChatRepository]),
+    TypeOrmExModule.forCustomRepository([UserRepository,ChatRepository,TransactionBoardRepository]),
     UserModule
   ],
   controllers: [TransactionController],
