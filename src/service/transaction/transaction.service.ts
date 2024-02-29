@@ -8,6 +8,7 @@ import DateUtils from 'src/utils/date-util';
 import { Cron } from '@nestjs/schedule';
 import { winstonLogger } from 'src/utils/logger/logger.util';
 import { ChatRepository } from 'src/repository/chat/chat.repository';
+import { TransactionBoardRepository } from 'src/repository/transactionBoard/transaction-board.repository';
 
 
 @Injectable()
@@ -18,7 +19,8 @@ export class TransactionService {
     
     constructor(
         private userRepository: UserRepository,
-        private chatRepository: ChatRepository
+        private chatRepository: ChatRepository,
+        private transactionBoardRepository: TransactionBoardRepository
     ){
         this.rpc = new JsonRpc('https:/heptagon-producer1.store');
         this.signatureProvider = new JsSignatureProvider([process.env.CONTRACT_PRIVATE_KEY]);
@@ -159,6 +161,7 @@ export class TransactionService {
                         }
                     }
                     await this.userRepository.updateRating(response.rows[0].seller,sale_count);
+                    await this.transactionBoardRepository.sellItem(response.rows[0].transaction_board_id,response.rows[0].item_count)
                     return result;
                 }else {
                     throw new ForbiddenException(`${transaction_id} is not your transaction`);

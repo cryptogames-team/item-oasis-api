@@ -178,4 +178,10 @@ export class TransactionBoardRepository extends Repository<TransactionBoard> {
             .execute();
         return transaction_board_id;
     }
+
+    async sellItem(transaction_board_id: number, amount: number){
+        const board = await this.getTransactionBoardByID(transaction_board_id);
+        board.transaction_board_amount -= amount;
+        await this.update(transaction_board_id,board);
+    }
 }
